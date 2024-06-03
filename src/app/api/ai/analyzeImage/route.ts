@@ -4,7 +4,9 @@ import {createOpenAI} from '@ai-sdk/openai';
 import {z} from 'zod';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    errorFormat: 'pretty'
+});
 
 const ticketSchema = z.object({
     price: z.string(),
@@ -57,9 +59,13 @@ export async function POST(req: NextRequest) {
             ]
         });
 
+        console.log(object);
+
         const ticket = await prisma.ticket.create({
             data: object
         });
+
+        console.log(ticket);
 
         return NextResponse.json(ticket);
     } catch (error) {
