@@ -1,0 +1,51 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Ticket {
+  id                String @default(cuid()) @id
+  price             String
+  date              String
+  clinic            String
+  address           String
+  user              String
+  receipt_number   String @unique
+  hc_number         String
+  service           String
+  quantity          String
+  unit_price        String
+  total_price       String
+  amount_received   String
+  change            String
+  ticket_number     String
+  appointment_date  String
+  appointment_time  String
+  createdAt         DateTime @default(now())
+}
+//
+// model Post {
+//   id        String     @default(cuid()) @id
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User?   @relation(fields: [authorId], references: [id])
+//   authorId  String?
+// }
+//
+// model User {
+//   id            String       @default(cuid()) @id
+//   name          String?
+//   email         String?   @unique
+//   createdAt     DateTime  @default(now()) @map(name: "created_at")
+//   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+//   posts         Post[]
+//   @@map(name: "users")
+// }
