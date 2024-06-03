@@ -1,7 +1,7 @@
 'use client';
 import {useEffect, useState} from "react";
 import Image from "next/image";
-import {Button} from "../../../../next-lab/src/components/ui/button";
+import {Button} from "@/components/ui/button";
 // import Tesseract from "tesseract.js";
 
 export default function ImageCapturer() {
@@ -86,7 +86,7 @@ export default function ImageCapturer() {
     return(
         <div>
             <input id='pictureInput' type="file" accept="image/*"  className='hidden' onChange={takePicture}/>
-            <Button  onClick={triggerInput}>take picture</Button>
+            <Button onClick={triggerInput}>take picture</Button>
 
             <pre>{JSON.stringify(debug, null, 2)}</pre>
 
