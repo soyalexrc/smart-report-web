@@ -2,11 +2,13 @@ import {NextRequest, NextResponse} from "next/server";
 import {generateObject} from 'ai';
 import {createOpenAI} from '@ai-sdk/openai';
 import {z} from 'zod';
-import { PrismaClient } from '@prisma/client';
+import {prisma} from "@/lib/db";
 
-const prisma = new PrismaClient({
-    errorFormat: 'pretty'
-});
+const promt = `
+    Please generate an object with the data available in the following ticket. 
+    if the image provided is not a ticket or does not have the ticket schema information, 
+    return a json with a message that says: Por favor toma una foto de un ticket de consulta.
+`
 
 const ticketSchema = z.object({
     price: z.string(),
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
             messages: [
                 {
                     role: 'user',
-                    content: 'Please generate an object with the data available in the following ticket.'
+                    content: promt
                 },
                 {
                     role: 'user',
@@ -59,15 +61,30 @@ export async function POST(req: NextRequest) {
             ]
         });
 
-        console.log(object);
-
+        // let totalPrice = '';
+        //
+        //
+        // if (object.total_price.includes(',')) {
+        //     console.log(object.total_price)
+        //     const numbersInString = object.total_price.split(',');
+        //     const sum = numbersInString
+        //         .map((str) => parseFloat(str)) // Convert strings to numbers
+        //         .reduce((acc, value) => acc + value, 0); // Sum the numbers
+        //
+        //     totalPrice = sum.toFixed(2);
+        //
+        //     console.log(totalPrice)
+        //
+        // } else {
+        //     console.log(object.total_price)
+        //     totalPrice = object.total_price
+        //     console.log(totalPrice)
+        //
+        // }
         const ticket = await prisma.ticket.create({
             data: object
         });
-
-        console.log(ticket);
-
-        return NextResponse.json(ticket);
+        return NextResponse.json(object);
     } catch (error) {
         return NextResponse.json(error);
     }
